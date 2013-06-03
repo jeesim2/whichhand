@@ -24,32 +24,24 @@ import android.widget.Toast;
  */
 public class FingerPrintView extends View {
 
+	/**
+	 * ACTION_MOVE 발생시 각 이벤트의 x좌표를 저장한다.
+	 */
 	List<Float> listX = new ArrayList<Float>();
-	List<Float> listY = new ArrayList<Float>();
 
 	/**
-	 * @param context
-	 * @param attrs
-	 * @param defStyle
+	 * ACTION_MOVE 발생시 각 이벤트의 y좌표를 저장한다.
 	 */
+	List<Float> listY = new ArrayList<Float>();
+
 	public FingerPrintView(Context context) {
 		super(context);
 	}
 
-	/**
-	 * @param context
-	 * @param attrs
-	 * @param defStyle
-	 */
 	public FingerPrintView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 
-	/**
-	 * @param context
-	 * @param attrs
-	 * @param defStyle
-	 */
 	public FingerPrintView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
@@ -80,18 +72,32 @@ public class FingerPrintView extends View {
 				}
 			}
 
+			// 터치 이벤트의 세로축 이동 거리를 구한다.
 			float yDiff = yMax - yMin;
 
-			if (yDiff < 100) {
+			if (yDiff < 5) {
+
+				// 이동거리가 너무 짧아 판단하기 힘들다.
+
+			} else if (yDiff < 100) {
+
+				// 100 픽셀 이하면 일반적인 '누름'을 가능성이 크다.
 				if (xWhenYMin > xWhenYMax) {
+					// 터치에서 좌상단을 향하면 왼손 터치다.
 					Toast.makeText(getContext(), "왼손-터치" + yDiff, Toast.LENGTH_SHORT).show();
 				} else {
+					// 터치에서 우상단을 향하면 오른손 터치다.
 					Toast.makeText(getContext(), "오른손-터치" + yDiff, Toast.LENGTH_SHORT).show();
 				}
+
 			} else {
+
+				// 100 픽셀 이상이면 스와이핑일 가능성이 크다
 				if (xWhenYMin > xWhenYMax) {
+					// 스와이핑에서 우상단을 향하면 오른손 터치다.
 					Toast.makeText(getContext(), "오른손-플링" + yDiff, Toast.LENGTH_SHORT).show();
 				} else {
+					// 스와이핑에서 좌상단을 향하면 왼손 터치다.
 					Toast.makeText(getContext(), "왼손-플링" + yDiff, Toast.LENGTH_SHORT).show();
 				}
 			}
